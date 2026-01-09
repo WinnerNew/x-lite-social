@@ -1,0 +1,8 @@
+{
+  "name": "X-Lite Social",
+  "description": "A Twitter-inspired mobile social H5 application featuring feed discovery, real-time-like messaging, and profile management.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
