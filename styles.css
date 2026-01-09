@@ -1,0 +1,30 @@
+
+:root {
+  color-scheme: dark;
+  --bg-black: #000000;
+  --zinc-800: #27272a;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Scrollbar reset */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

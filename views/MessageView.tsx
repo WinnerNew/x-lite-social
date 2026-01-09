@@ -31,7 +31,7 @@ const MOCK_CHATS: Chat[] = [
       followers: 850,
       following: 420
     },
-    lastMessage: 'Are we still meeting at 5?',
+    lastMessage: 'Are we still meeting at 5? I have the prototypes ready.',
     unreadCount: 0
   }
 ];
@@ -39,46 +39,50 @@ const MOCK_CHATS: Chat[] = [
 const MessageView: React.FC<MessageViewProps> = ({ onSelectChat }) => {
   return (
     <div className="flex flex-col h-full bg-black">
-      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 p-3 border-b border-gray-800">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Messages</h2>
-          <div className="flex gap-4">
-            <Settings className="w-5 h-5" />
-            <MailPlus className="w-5 h-5" />
+      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800 pt-[env(safe-area-inset-top,8px)]">
+        <div className="flex items-center justify-between px-4 py-2">
+          <h2 className="text-xl font-extrabold tracking-tight">Messages</h2>
+          <div className="flex gap-2">
+            <button className="p-2 hover:bg-zinc-800 rounded-full transition-colors"><Settings size={20} /></button>
+            <button className="p-2 hover:bg-zinc-800 rounded-full transition-colors"><MailPlus size={20} /></button>
           </div>
         </div>
-        <div className="bg-gray-900 rounded-full flex items-center px-4 py-2 text-gray-400 mb-2">
-          <Search className="w-4 h-4 mr-3" />
-          <input 
-            type="text" 
-            placeholder="Search Direct Messages" 
-            className="bg-transparent border-none outline-none w-full text-white text-sm"
-          />
+        <div className="px-4 py-2">
+          <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-full px-4 py-2 group focus-within:ring-1 focus-within:ring-sky-500 transition-all">
+            <Search size={16} className="text-zinc-500" />
+            <input 
+              type="text" 
+              placeholder="Search Direct Messages" 
+              className="bg-transparent border-none text-[14px] ml-3 outline-none w-full placeholder:text-zinc-600" 
+            />
+          </div>
         </div>
       </header>
 
-      <div className="flex flex-col">
+      <div className="divide-y divide-zinc-800">
         {MOCK_CHATS.map(chat => (
           <div 
             key={chat.id} 
             onClick={() => onSelectChat(chat.id)}
-            className="flex items-center gap-3 p-4 hover:bg-white/5 cursor-pointer"
+            className="p-4 flex gap-3 hover:bg-zinc-900/30 transition-colors cursor-pointer group"
           >
-            <div className="relative">
-              <img src={chat.participant.avatar} className="w-12 h-12 rounded-full" />
+            <div className="relative flex-shrink-0">
+              <img src={chat.participant.avatar} className="w-12 h-12 rounded-full border border-zinc-800 object-cover" />
               {chat.unreadCount > 0 && (
-                <div className="absolute top-0 -right-1 bg-sky-500 w-3 h-3 rounded-full border-2 border-black" />
+                <div className="absolute top-0 right-0 w-3.5 h-3.5 bg-sky-500 rounded-full border-2 border-black" />
               )}
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-center mb-0.5">
-                <div className="flex items-center gap-1 min-w-0">
-                  <span className="font-bold text-sm truncate">{chat.participant.username}</span>
-                  <span className="text-gray-500 text-sm truncate">{chat.participant.handle}</span>
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <div className="flex justify-between items-baseline mb-0.5">
+                <div className="flex gap-1 min-w-0 items-center">
+                  <span className="font-bold text-[15px] truncate group-hover:underline">{chat.participant.username}</span>
+                  <span className="text-zinc-500 text-[14px] truncate">{chat.participant.handle}</span>
                 </div>
-                <span className="text-gray-500 text-xs">Oct 24</span>
+                <span className="text-zinc-500 text-[13px] flex-shrink-0 ml-2">Oct 24</span>
               </div>
-              <p className="text-gray-500 text-sm truncate">{chat.lastMessage}</p>
+              <p className={`text-[14px] truncate ${chat.unreadCount > 0 ? 'text-zinc-100 font-medium' : 'text-zinc-500'}`}>
+                {chat.lastMessage}
+              </p>
             </div>
           </div>
         ))}

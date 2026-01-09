@@ -21,12 +21,12 @@ const MOCK_POSTS: Post[] = [
       followers: 1200,
       following: 300
     },
-    content: "The future of AI is looking incredibly bright today! Who's excited for the next generation of LLMs? 🤖✨ #AI #Tech",
-    timestamp: '2h',
-    likes: 124,
-    reposts: 28,
-    replies: 12,
-    image: 'https://picsum.photos/seed/ai/800/450'
+    content: "Just saw the latest prototype for the Gemini 3 UI—mind blown! 🤯 The speed and responsiveness are on another level. #Tech #AI",
+    timestamp: '1h',
+    likes: 85,
+    reposts: 12,
+    replies: 5,
+    image: 'https://picsum.photos/seed/future/800/450'
   },
   {
     id: '2',
@@ -39,12 +39,12 @@ const MOCK_POSTS: Post[] = [
       followers: 850,
       following: 420
     },
-    content: "Just finished a marathon in Tokyo! 🏃‍♀️🗼 The energy here is absolutely unmatched. 🇯🇵",
-    timestamp: '5h',
-    likes: 842,
-    reposts: 124,
-    replies: 45,
-    image: 'https://picsum.photos/seed/tokyo/800/500'
+    content: "Mornings in the city just hit different. ✨🌆",
+    timestamp: '3h',
+    likes: 231,
+    reposts: 4,
+    replies: 18,
+    image: 'https://picsum.photos/seed/city/800/500'
   }
 ];
 
@@ -55,14 +55,13 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
 
   return (
     <div className="flex flex-col min-h-full">
-      {/* Sticky Header */}
-      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-gray-800">
-        <div className="flex items-center px-4 py-3 pt-safe">
-          <img src={currentUser.avatar} alt="me" className="w-8 h-8 rounded-full border border-gray-800" />
+      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
+        <div className="flex items-center px-4 py-3 pt-[env(safe-area-inset-top,12px)]">
+          <img src={currentUser.avatar} alt="me" className="w-8 h-8 rounded-full border border-zinc-800" />
           <div className="mx-auto">
-            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white" aria-hidden="true">
-              <g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g>
-            </svg>
+             <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white">
+               <g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g>
+             </svg>
           </div>
           <div className="w-8"></div>
         </div>
@@ -72,21 +71,20 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
             <button 
               key={t}
               onClick={() => setTab(t)}
-              className="flex-1 py-4 text-center hover:bg-white/5 relative"
+              className="flex-1 py-4 text-center hover:bg-zinc-900/50 relative group transition-colors"
             >
-              <span className={`font-bold transition-colors ${tab === t ? 'text-white' : 'text-gray-500'}`}>
+              <span className={`text-[15px] font-bold ${tab === t ? 'text-zinc-100' : 'text-zinc-500'}`}>
                 {t === 'FOR_YOU' ? 'For you' : 'Following'}
               </span>
               {tab === t && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-sky-500 rounded-full" />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-[4.5px] bg-sky-500 rounded-full" />
               )}
             </button>
           ))}
         </div>
       </header>
 
-      {/* Feed */}
-      <div className="flex flex-col divide-y divide-gray-800">
+      <div className="flex flex-col">
         {MOCK_POSTS.map(post => (
           <PostCard 
             key={post.id} 
@@ -97,7 +95,6 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
         ))}
       </div>
 
-      {/* Modals */}
       <ImagePreview src={previewImage} onClose={() => setPreviewImage(null)} />
       <ReplyModal 
         isOpen={!!replyPost} 

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Home, Search, Bell, Mail, User, Plus, LogOut, Settings } from 'lucide-react';
+import { Home, Search, Bell, Mail, User, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HomeView from './views/HomeView';
 import ExploreView from './views/ExploreView';
@@ -47,67 +47,61 @@ const App: React.FC = () => {
     }
   };
 
+  const showNavbar = currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS'].includes(currentView);
+
   const NavItem = ({ icon: Icon, view }: { icon: any, view: ViewState }) => (
     <button
       onClick={() => setCurrentView(view)}
-      className={`flex flex-col items-center justify-center flex-1 py-3 transition-all active:scale-90 ${
-        currentView === view ? 'text-white' : 'text-gray-500'
+      className={`flex flex-col items-center justify-center flex-1 py-3 transition-colors active:scale-90 ${
+        currentView === view ? 'text-zinc-100' : 'text-zinc-500'
       }`}
     >
-      <Icon className={`w-7 h-7 ${currentView === view ? 'fill-current stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+      <Icon className={`w-7 h-7 ${currentView === view ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
     </button>
   );
 
-  const showNavbar = currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS'].includes(currentView);
-
   return (
-    <div className="flex flex-col h-screen w-full bg-black text-white relative">
-      <div className="flex-1 flex justify-center w-full">
-        {/* Main H5 Container - Centered and constrained for larger screens */}
-        <div className="w-full max-w-md bg-black border-x border-gray-800 relative flex flex-col h-full shadow-2xl overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.main 
-              key={currentView}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="flex-1 overflow-y-auto pb-20 h-full"
-            >
-              {renderView()}
-            </motion.main>
-          </AnimatePresence>
+    <div className="flex justify-center w-full min-h-screen bg-zinc-950">
+      <div className="w-full max-w-[450px] bg-black min-h-screen relative flex flex-col border-x border-zinc-800 shadow-2xl overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.main 
+            key={currentView}
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1 overflow-y-auto hide-scrollbar"
+          >
+            {renderView()}
+          </motion.main>
+        </AnimatePresence>
 
-          {/* Floating Action Button */}
-          {showNavbar && (
+        {showNavbar && (
+          <>
             <motion.button 
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setCurrentView('CREATE_POST')}
-              className="absolute bottom-20 right-4 bg-sky-500 hover:bg-sky-400 text-white p-4 rounded-full shadow-xl z-30 active:scale-90 transition-transform"
+              className="absolute bottom-24 right-5 bg-sky-500 hover:bg-sky-600 text-white p-4 rounded-full shadow-lg shadow-sky-500/20 z-40"
             >
-              <Plus className="w-6 h-6 stroke-[3]" />
+              <Plus size={24} strokeWidth={3} />
             </motion.button>
-          )}
 
-          {/* Navigation Bar */}
-          {showNavbar && (
-            <nav className="fixed bottom-0 w-full max-w-md bg-black/80 backdrop-blur-xl border-t border-gray-800 flex justify-around items-center z-50 pb-safe">
+            <nav className="sticky bottom-0 w-full bg-black/80 backdrop-blur-xl border-t border-zinc-800 flex justify-around items-center z-50 pb-[env(safe-area-inset-bottom)]">
               <NavItem icon={Home} view="HOME" />
               <NavItem icon={Search} view="EXPLORE" />
               <NavItem icon={Bell} view="NOTIFICATIONS" />
               <NavItem icon={Mail} view="MESSAGES" />
               <button 
                 onClick={() => setCurrentView('PROFILE')}
-                className={`flex-1 flex justify-center items-center py-3 transition-all active:scale-90 ${currentView === 'PROFILE' ? 'text-white' : 'text-gray-500'}`}
+                className="flex-1 flex justify-center py-3"
               >
-                <div className={`w-7 h-7 rounded-full border-2 overflow-hidden transition-colors ${currentView === 'PROFILE' ? 'border-sky-500' : 'border-transparent'}`}>
-                  <img src={currentUser?.avatar} className="w-full h-full object-cover" />
+                <div className={`w-7 h-7 rounded-full border-2 overflow-hidden transition-all ${currentView === 'PROFILE' ? 'border-sky-500 scale-110' : 'border-transparent opacity-70'}`}>
+                  <img src={currentUser?.avatar} className="w-full h-full object-cover" alt="me" />
                 </div>
               </button>
             </nav>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

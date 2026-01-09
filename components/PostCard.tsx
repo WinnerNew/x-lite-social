@@ -27,87 +27,91 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
     setReposted(!reposted);
   };
 
-  const ActionButton = ({ icon: Icon, label, count, activeColor, active, onClick, hoverBg }: any) => (
-    <button 
-      onClick={onClick}
-      className={`flex items-center gap-2 group transition-colors ${active ? activeColor : 'text-gray-500 hover:' + activeColor}`}
-    >
-      <div className={`p-2 rounded-full transition-colors group-hover:${hoverBg} ${active ? hoverBg : ''}`}>
-        <Icon className={`w-[18px] h-[18px] ${active && Icon === Heart ? 'fill-current' : ''}`} />
-      </div>
-      {count !== undefined && <span className="text-[13px]">{count}</span>}
-    </button>
-  );
-
   return (
-    <motion.div 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }}
-      className="border-b border-gray-800 p-4 flex gap-3 hover:bg-white/[0.02] transition-colors cursor-pointer active:bg-white/[0.04]"
-    >
-      <img 
-        src={post.author.avatar} 
-        alt={post.author.username} 
-        className="w-10 h-10 rounded-full object-cover flex-shrink-0 bg-zinc-900" 
-      />
+    <div className="border-b border-zinc-800 p-4 flex gap-3 hover:bg-zinc-900/40 transition-colors cursor-pointer w-full overflow-hidden">
+      <div className="flex-shrink-0">
+        <img 
+          src={post.author.avatar} 
+          alt={post.author.username} 
+          className="w-10 h-10 rounded-full object-cover bg-zinc-900 shadow-sm border border-zinc-800" 
+        />
+      </div>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-0.5">
+        <div className="flex items-center justify-between group">
           <div className="flex items-center gap-1 min-w-0">
-            <span className="font-bold truncate text-[15px] text-white hover:underline">{post.author.username}</span>
-            <span className="text-gray-500 truncate text-[14px]">{post.author.handle}</span>
-            <span className="text-gray-500 text-[14px]">· {post.timestamp}</span>
+            <span className="font-bold text-zinc-100 truncate hover:underline text-[15px]">{post.author.username}</span>
+            <span className="text-zinc-500 truncate text-[14px]">{post.author.handle}</span>
+            <span className="text-zinc-500 text-[14px] flex-shrink-0">· {post.timestamp}</span>
           </div>
-          <button className="text-gray-500 p-1 hover:text-sky-500 rounded-full transition-colors">
-            <MoreHorizontal className="w-4 h-4" />
+          <button className="text-zinc-500 hover:text-sky-500 hover:bg-sky-500/10 p-1.5 rounded-full transition-all">
+            <MoreHorizontal size={16} />
           </button>
         </div>
 
-        <p className="text-[15px] leading-relaxed mb-3 whitespace-pre-wrap text-white/90">{post.content}</p>
+        <p className="text-[15px] leading-normal text-zinc-200 mt-0.5 whitespace-pre-wrap break-words">{post.content}</p>
 
         {post.image && (
           <motion.div 
-            layoutId={`post-img-${post.image}`}
+            whileHover={{ opacity: 0.95 }}
             onClick={(e) => { e.stopPropagation(); onImagePreview(post.image!); }}
-            className="rounded-2xl overflow-hidden border border-gray-800 mb-3 bg-zinc-900"
+            className="mt-3 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 max-h-96 w-full"
           >
-            <img src={post.image} alt="post" className="w-full h-auto object-cover max-h-80 hover:opacity-90 transition-opacity" />
+            <img 
+              src={post.image} 
+              alt="post" 
+              className="w-full h-full object-cover max-h-96" 
+            />
           </motion.div>
         )}
 
-        <div className="flex justify-between text-gray-500 max-w-sm -ml-2">
-          <ActionButton 
-            icon={MessageCircle} 
-            count={post.replies} 
-            activeColor="text-sky-500" 
-            hoverBg="bg-sky-500/10" 
-            onClick={(e: any) => { e.stopPropagation(); onReply(post); }}
-          />
-          <ActionButton 
-            icon={Repeat2} 
-            count={post.reposts + (reposted ? 1 : 0)} 
-            active={reposted} 
-            activeColor="text-green-500" 
-            hoverBg="bg-green-500/10" 
+        <div className="flex justify-between text-zinc-500 mt-3 -ml-2 max-w-[320px]">
+          <button 
+            onClick={(e) => { e.stopPropagation(); onReply(post); }}
+            className="flex items-center gap-1 group transition-colors hover:text-sky-500"
+          >
+            <div className="p-2 rounded-full group-hover:bg-sky-500/10 transition-colors">
+              <MessageCircle size={18} />
+            </div>
+            <span className="text-[13px] font-medium">{post.replies}</span>
+          </button>
+          
+          <button 
             onClick={handleRepost}
-          />
-          <ActionButton 
-            icon={Heart} 
-            count={likeCount} 
-            active={liked} 
-            activeColor="text-pink-600" 
-            hoverBg="bg-pink-600/10" 
+            className={`flex items-center gap-1 group transition-colors ${reposted ? 'text-green-500' : 'hover:text-green-500'}`}
+          >
+            <div className={`p-2 rounded-full transition-colors ${reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'}`}>
+              <Repeat2 size={18} />
+            </div>
+            <span className="text-[13px] font-medium">{post.reposts + (reposted ? 1 : 0)}</span>
+          </button>
+
+          <button 
             onClick={handleLike}
-          />
-          <ActionButton 
-            icon={Share} 
-            activeColor="text-sky-500" 
-            hoverBg="bg-sky-500/10" 
-            onClick={(e: any) => e.stopPropagation()}
-          />
+            className={`flex items-center gap-1 group transition-colors ${liked ? 'text-pink-500' : 'hover:text-pink-500'}`}
+          >
+            <div className={`p-2 rounded-full transition-colors ${liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={liked ? 'liked' : 'unliked'}
+                  initial={liked ? { scale: 0.7 } : false}
+                  animate={{ scale: 1 }}
+                >
+                  <Heart size={18} fill={liked ? 'currentColor' : 'none'} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <span className="text-[13px] font-medium">{likeCount}</span>
+          </button>
+
+          <button className="flex items-center gap-1 group hover:text-sky-500">
+            <div className="p-2 rounded-full group-hover:bg-sky-500/10 transition-colors">
+              <Share size={18} />
+            </div>
+          </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
