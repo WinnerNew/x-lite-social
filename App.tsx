@@ -10,6 +10,7 @@ import ChatRoomView from './views/ChatRoomView';
 import AuthView from './views/AuthView';
 import NotificationsView from './views/NotificationsView';
 import SettingsView from './views/SettingsView';
+import SystemSettingsView from './views/SystemSettingsView';
 import CreatePostView from './views/CreatePostView';
 import EditProfileView from './views/EditProfileView';
 import { User as UserType, ViewState } from './types';
@@ -78,7 +79,15 @@ const App: React.FC = () => {
           />
         );
       case 'SETTINGS':
-        return <SettingsView onBack={() => setCurrentView('PROFILE')} onLogout={handleLogout} />;
+        return (
+          <SettingsView 
+            onBack={() => setCurrentView('PROFILE')} 
+            onLogout={handleLogout}
+            onSystemSettings={() => setCurrentView('SYSTEM_SETTINGS')}
+          />
+        );
+      case 'SYSTEM_SETTINGS':
+        return <SystemSettingsView onBack={() => setCurrentView('SETTINGS')} />;
       case 'CREATE_POST':
         return <CreatePostView onBack={() => setCurrentView('HOME')} />;
       default:
@@ -87,7 +96,7 @@ const App: React.FC = () => {
   };
 
   const showNavbar =
-    currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS', 'EDIT_PROFILE'].includes(currentView);
+    currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS', 'EDIT_PROFILE', 'SYSTEM_SETTINGS'].includes(currentView);
 
   const NavItem = ({ icon: Icon, view }: { icon: any; view: ViewState }) => (
     <button

@@ -46,5 +46,6 @@ export type ViewState =
   | 'CHAT' 
   | 'AUTH' 
   | 'SETTINGS' 
+  | 'SYSTEM_SETTINGS'
   | 'CREATE_POST'
   | 'EDIT_PROFILE';
