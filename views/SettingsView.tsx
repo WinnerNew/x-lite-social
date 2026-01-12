@@ -29,7 +29,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onBack, onLogout, onSystemS
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto hide-scrollbar">
         <div className="mt-4">
           <SettingItem icon={User} label="Your Account" />
           <SettingItem icon={Shield} label="Security and Account Access" />

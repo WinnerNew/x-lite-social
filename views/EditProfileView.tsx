@@ -83,7 +83,7 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({ user, onSave, onCance
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto pb-10">
+      <div className="flex-1 overflow-y-auto pb-10 hide-scrollbar">
         {/* Profile Media Edit - Sync with new tech background */}
         <div className="relative h-32 bg-zinc-900 overflow-hidden">
           <img 

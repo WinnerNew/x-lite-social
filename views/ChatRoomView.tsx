@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Info, Image, Gift, Smile, Send } from 'lucide-react';
 import { Message } from '../types';
@@ -35,8 +34,8 @@ const ChatRoomView: React.FC<ChatRoomViewProps> = ({ chatId, onBack }) => {
 
   return (
     <div className="flex flex-col h-screen bg-black">
-      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
-        <div className="flex items-center justify-between px-4 py-2 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-900 pt-safe">
+        <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-4">
             <button onClick={onBack} className="p-2 hover:bg-zinc-800 rounded-full transition-colors"><ArrowLeft size={20} /></button>
             <div className="flex flex-col">

@@ -1,44 +1,119 @@
-
+/* 核心设计系统：Zinc & Noir (Twitter Style) */
 :root {
   color-scheme: dark;
   --bg-black: #000000;
-  --zinc-900: #18181b;
+  --zinc-50: #fafafa;
+  --zinc-100: #f4f4f5;
+  --zinc-200: #e4e4e7;
+  --zinc-300: #d4d4d8;
+  --zinc-400: #a1a1aa;
+  --zinc-500: #71717a;
+  --zinc-600: #52525b;
+  --zinc-700: #3f3f46;
   --zinc-800: #27272a;
+  --zinc-900: #18181b;
+  --zinc-950: #09090b;
+  --sky-500: #1d9bf0; /* Twitter Blue */
+  --sky-600: #1a8cd8;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
   background-color: var(--bg-black);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Base image containment */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  -webkit-user-drag: none;
-}
-
-/* Scrollbar reset */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Fix potential text overflow in flex containers */
-.min-w-0 {
-  min-width: 0;
-}
-
-/* Prevent accidental lateral swipe navigation on some browsers */
+/* 布局容器 */
 #root {
   width: 100%;
-  overflow-x: hidden;
-  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: var(--zinc-950);
+}
+
+.ignore-vw {
+  max-width: 450px !important; 
+}
+
+/* --- 全局滚动条美化 (Webkit) --- */
+/* 定义滚动条轨道宽度与高度 */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* 滚动条滑块 (Thumb) */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(113, 113, 122, 0.2); /* 默认极淡的 Zinc-500 */
+  border-radius: 10px;
+  background-clip: padding-box;
+  /* 增加透明边距，模拟悬浮效果 */
+  border: 1px solid transparent; 
+  transition: background-color 0.3s ease;
+}
+
+/* 交互状态：用户鼠标悬停或正在滚动时加深颜色 */
+*:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(113, 113, 122, 0.45);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(113, 113, 122, 0.6);
+}
+
+/* 滚动条轨道 (Track) - 保持透明以实现悬浮感 */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 针对 Firefox 的兼容性配置 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(113, 113, 122, 0.2) transparent;
+}
+
+/* 强制隐藏类 (如需要彻底隐藏某容器滚动条) */
+.hide-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* --- 核心布局工具 --- */
+.pt-safe {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+}
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+}
+
+.glass-header {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+}
+
+.active-press {
+  transition: transform 0.1s ease;
+}
+.active-press:active {
+  transform: scale(0.96);
+}
+
+.scroll-smooth-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 图片适配 */
+img {
+  user-select: none;
+  pointer-events: none;
 }

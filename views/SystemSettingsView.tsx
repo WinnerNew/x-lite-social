@@ -70,7 +70,7 @@ const SystemSettingsView: React.FC<SystemSettingsViewProps> = ({ onBack }) => {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto pb-10">
+      <div className="flex-1 overflow-y-auto pb-10 hide-scrollbar">
         <SectionHeader title="Display" />
         <ToggleItem 
           icon={Moon} 
