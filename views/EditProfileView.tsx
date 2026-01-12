@@ -84,10 +84,10 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({ user, onSave, onCance
       </header>
 
       <div className="flex-1 overflow-y-auto pb-10">
-        {/* Profile Media Edit */}
+        {/* Profile Media Edit - Sync with new tech background */}
         <div className="relative h-32 bg-zinc-900 overflow-hidden">
           <img 
-            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" 
+            src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=1200&q=80" 
             className="w-full h-full object-cover opacity-60" 
             alt="cover" 
           />

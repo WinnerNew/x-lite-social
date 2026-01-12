@@ -13,8 +13,8 @@ const NotificationsView: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-black">
-      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800 pt-[env(safe-area-inset-top,8px)]">
-        <div className="flex items-center justify-between px-4 py-2">
+      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-2 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <h2 className="text-xl font-extrabold tracking-tight">Notifications</h2>
           <button className="p-2 hover:bg-zinc-800 rounded-full transition-colors"><Settings size={20} /></button>
         </div>

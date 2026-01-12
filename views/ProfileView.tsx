@@ -16,8 +16,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onEditProfi
   
   return (
     <div className="flex flex-col min-h-full">
-      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800 pt-[env(safe-area-inset-top,0px)]">
-        <div className="flex items-center gap-7 px-4 py-1">
+      <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
+        <div className="flex items-center gap-7 px-4 py-2 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <button onClick={onBack} className="p-2 hover:bg-zinc-800 rounded-full transition-colors">
             <ArrowLeft size={20} />
           </button>
@@ -29,13 +29,14 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onEditProfi
       </header>
 
       <div className="flex-1">
+        {/* 精美科技感背景图 */}
         <div className="h-32 bg-zinc-900 relative overflow-hidden">
           <img 
-            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" 
+            src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=1200&q=80" 
             className="w-full h-full object-cover" 
             alt="cover" 
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60" />
           <div className="absolute -bottom-10 left-4">
             <div className="w-20 h-20 rounded-full border-4 border-black bg-zinc-900 overflow-hidden shadow-lg">
               <img src={user.avatar} className="w-full h-full object-cover" alt="profile" />

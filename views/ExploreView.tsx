@@ -14,7 +14,7 @@ const ExploreView: React.FC = () => {
   return (
     <div className="flex flex-col bg-black min-h-full">
       <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
-        <div className="px-4 py-2 pt-[env(safe-area-inset-top,8px)]">
+        <div className="px-4 py-2 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <div className="flex items-center gap-4">
             <div className="flex-1 flex items-center bg-zinc-900 border border-zinc-800 rounded-full px-4 py-2 group focus-within:ring-1 focus-within:ring-sky-500 focus-within:border-sky-500 transition-all">
               <Search size={16} className="text-zinc-500 group-focus-within:text-sky-500" />

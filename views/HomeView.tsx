@@ -10,7 +10,6 @@ interface HomeViewProps {
   currentUser: User;
 }
 
-// 模拟生成动态数据的工具函数
 const generateMockPosts = (startIndex: number, count: number): Post[] => {
   const categories = ['Tech', 'Nature', 'Architecture', 'People', 'Travel', 'Art'];
   return Array.from({ length: count }).map((_, i) => {
@@ -46,20 +45,15 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
   
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  // 加载更多帖子的逻辑
   const loadMorePosts = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
-    
-    // 模拟网络延迟
     await new Promise(resolve => setTimeout(resolve, 800));
-    
     const newPosts = generateMockPosts(posts.length, 5);
     setPosts(prev => [...prev, ...newPosts]);
     setIsLoading(false);
   }, [posts.length, isLoading]);
 
-  // 设置 Intersection Observer 监听底部
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -69,15 +63,12 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
       },
       { threshold: 1.0 }
     );
-
     if (observerTarget.current) {
       observer.observe(observerTarget.current);
     }
-
     return () => observer.disconnect();
   }, [loadMorePosts]);
 
-  // 初始加载
   useEffect(() => {
     if (posts.length === 0) {
       loadMorePosts();
@@ -87,7 +78,7 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
   return (
     <div className="flex flex-col min-h-full">
       <header className="sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
-        <div className="flex items-center px-4 py-3 pt-[env(safe-area-inset-top,12px)]">
+        <div className="flex items-center px-4 py-3 pt-[calc(env(safe-area-inset-top,0px)+1.25rem)]">
           <img src={currentUser.avatar} alt="me" className="w-8 h-8 rounded-full border border-zinc-800" />
           <div className="mx-auto">
              <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white">
@@ -126,7 +117,6 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
         ))}
       </div>
 
-      {/* 底部哨兵元素与加载指示器 */}
       <div ref={observerTarget} className="flex justify-center p-8">
         {isLoading && (
           <Loader2 className="w-6 h-6 text-sky-500 animate-spin" />
