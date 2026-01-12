@@ -1,57 +1,88 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PostCard from '../components/PostCard';
 import ImagePreview from '../components/ImagePreview';
 import ReplyModal from '../components/ReplyModal';
 import { Post, User } from '../types';
+import { Loader2 } from 'lucide-react';
 
 interface HomeViewProps {
   currentUser: User;
 }
 
-const MOCK_POSTS: Post[] = [
-  {
-    id: '1',
-    userId: '2',
-    author: {
-      id: '2',
-      username: 'Tech Insider',
-      handle: '@tech_news',
-      avatar: 'https://picsum.photos/seed/tech/200',
-      followers: 1200,
-      following: 300
-    },
-    content: "Just saw the latest prototype for the Gemini 3 UI—mind blown! 🤯 The speed and responsiveness are on another level. #Tech #AI",
-    timestamp: '1h',
-    likes: 85,
-    reposts: 12,
-    replies: 5,
-    image: 'https://picsum.photos/seed/future/800/450'
-  },
-  {
-    id: '2',
-    userId: '3',
-    author: {
-      id: '3',
-      username: 'Sarah Jenkins',
-      handle: '@sarah_j',
-      avatar: 'https://picsum.photos/seed/sarah/200',
-      followers: 850,
-      following: 420
-    },
-    content: "Mornings in the city just hit different. ✨🌆",
-    timestamp: '3h',
-    likes: 231,
-    reposts: 4,
-    replies: 18,
-    image: 'https://picsum.photos/seed/city/800/500'
-  }
-];
+// 模拟生成动态数据的工具函数
+const generateMockPosts = (startIndex: number, count: number): Post[] => {
+  const categories = ['Tech', 'Nature', 'Architecture', 'People', 'Travel', 'Art'];
+  return Array.from({ length: count }).map((_, i) => {
+    const id = (startIndex + i).toString();
+    const category = categories[Math.floor(Math.random() * categories.length)];
+    return {
+      id,
+      userId: `user-${id}`,
+      author: {
+        id: `user-${id}`,
+        username: `Explorer_${id}`,
+        handle: `@explorer_${id}`,
+        avatar: `https://picsum.photos/seed/user${id}/200`,
+        followers: Math.floor(Math.random() * 5000),
+        following: Math.floor(Math.random() * 1000)
+      },
+      content: `This is dynamically loaded post number ${id}. Exploring the beauty of ${category} today! #InfiniteScroll #SocialH5`,
+      timestamp: `${Math.floor(Math.random() * 24)}h`,
+      likes: Math.floor(Math.random() * 500),
+      reposts: Math.floor(Math.random() * 100),
+      replies: Math.floor(Math.random() * 50),
+      image: Math.random() > 0.3 ? `https://picsum.photos/seed/post${id}/800/600` : undefined
+    };
+  });
+};
 
 const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
   const [tab, setTab] = useState<'FOR_YOU' | 'FOLLOWING'>('FOR_YOU');
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [replyPost, setReplyPost] = useState<Post | null>(null);
+  
+  const observerTarget = useRef<HTMLDivElement>(null);
+
+  // 加载更多帖子的逻辑
+  const loadMorePosts = useCallback(async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    
+    // 模拟网络延迟
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    const newPosts = generateMockPosts(posts.length, 5);
+    setPosts(prev => [...prev, ...newPosts]);
+    setIsLoading(false);
+  }, [posts.length, isLoading]);
+
+  // 设置 Intersection Observer 监听底部
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          loadMorePosts();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loadMorePosts]);
+
+  // 初始加载
+  useEffect(() => {
+    if (posts.length === 0) {
+      loadMorePosts();
+    }
+  }, []);
 
   return (
     <div className="flex flex-col min-h-full">
@@ -85,7 +116,7 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
       </header>
 
       <div className="flex flex-col">
-        {MOCK_POSTS.map(post => (
+        {posts.map(post => (
           <PostCard 
             key={post.id} 
             post={post} 
@@ -93,6 +124,13 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
             onReply={setReplyPost}
           />
         ))}
+      </div>
+
+      {/* 底部哨兵元素与加载指示器 */}
+      <div ref={observerTarget} className="flex justify-center p-8">
+        {isLoading && (
+          <Loader2 className="w-6 h-6 text-sky-500 animate-spin" />
+        )}
       </div>
 
       <ImagePreview src={previewImage} onClose={() => setPreviewImage(null)} />

@@ -95,8 +95,7 @@ const App: React.FC = () => {
     }
   };
 
-  const showNavbar =
-    currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS', 'EDIT_PROFILE', 'SYSTEM_SETTINGS'].includes(currentView);
+  const hasNavbar = currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS', 'EDIT_PROFILE', 'SYSTEM_SETTINGS'].includes(currentView);
 
   const NavItem = ({ icon: Icon, view }: { icon: any; view: ViewState }) => (
     <button
@@ -114,56 +113,63 @@ const App: React.FC = () => {
   );
 
   return (
-    <div className="flex min-h-screen w-full justify-center bg-zinc-950 antialiased">
-      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden border-x border-zinc-900 bg-black shadow-2xl">
-        <AnimatePresence mode="wait">
-          <motion.main
-            key={currentView}
-            initial={{ opacity: 0, x: 5 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -5 }}
-            transition={{ duration: 0.15 }}
-            className="hide-scrollbar flex-1 overflow-y-auto overflow-x-hidden"
-          >
-            {renderView()}
-          </motion.main>
-        </AnimatePresence>
-
-        {showNavbar && (
-          <>
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setCurrentView('CREATE_POST')}
-              className="absolute bottom-24 right-5 z-40 rounded-full bg-sky-500 p-4 text-white shadow-lg shadow-sky-500/20 transition-transform hover:bg-sky-600"
+    <div className="flex h-screen w-full justify-center bg-zinc-950 overflow-hidden">
+      {/* 模拟手机容器 */}
+      <div className="relative flex h-full w-full max-w-[450px] flex-col border-x border-zinc-900 bg-black shadow-2xl overflow-hidden">
+        
+        {/* 内容滚动区域 */}
+        <div className="flex-1 overflow-y-auto hide-scrollbar">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentView}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="min-h-full"
             >
-              <Plus size={24} strokeWidth={3} />
-            </motion.button>
+              {renderView()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-            <nav className="sticky bottom-0 z-50 flex w-full items-center justify-around border-t border-zinc-900 bg-black/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
-              <NavItem icon={Home} view="HOME" />
-              <NavItem icon={Search} view="EXPLORE" />
-              <NavItem icon={Bell} view="NOTIFICATIONS" />
-              <NavItem icon={Mail} view="MESSAGES" />
-              <button
-                onClick={() => setCurrentView('PROFILE')}
-                className="flex flex-1 justify-center py-3"
+        {/* 悬浮发布按钮 (仅在有 Navbar 时显示) */}
+        {hasNavbar && (
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setCurrentView('CREATE_POST')}
+            className="absolute bottom-20 right-5 z-50 rounded-full bg-sky-500 p-4 text-white shadow-lg shadow-sky-500/30 transition-transform active:bg-sky-600"
+          >
+            <Plus size={24} strokeWidth={3} />
+          </motion.button>
+        )}
+
+        {/* 固定底部导航栏 */}
+        {hasNavbar && (
+          <nav className="flex w-full items-center justify-around border-t border-zinc-900 bg-black/90 pb-[env(safe-area-inset-bottom,12px)] backdrop-blur-xl z-50">
+            <NavItem icon={Home} view="HOME" />
+            <NavItem icon={Search} view="EXPLORE" />
+            <NavItem icon={Bell} view="NOTIFICATIONS" />
+            <NavItem icon={Mail} view="MESSAGES" />
+            <button
+              onClick={() => setCurrentView('PROFILE')}
+              className="flex flex-1 justify-center py-3"
+            >
+              <div
+                className={`h-7 w-7 overflow-hidden rounded-full border-2 transition-all ${
+                  currentView === 'PROFILE'
+                    ? 'scale-110 border-sky-500'
+                    : 'border-transparent opacity-70'
+                }`}
               >
-                <div
-                  className={`h-7 w-7 overflow-hidden rounded-full border-2 transition-all ${
-                    currentView === 'PROFILE'
-                      ? 'scale-110 border-sky-500'
-                      : 'border-transparent opacity-70'
-                  }`}
-                >
-                  <img
-                    src={currentUser?.avatar}
-                    className="h-full w-full object-cover"
-                    alt="avatar"
-                  />
-                </div>
-              </button>
-            </nav>
-          </>
+                <img
+                  src={currentUser?.avatar}
+                  className="h-full w-full object-cover"
+                  alt="avatar"
+                />
+              </div>
+            </button>
+          </nav>
         )}
       </div>
     </div>

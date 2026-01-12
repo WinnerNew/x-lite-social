@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Heart,
@@ -23,6 +24,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const [liked, setLiked] = useState(false);
   const [reposted, setReposted] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,6 +45,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <img
           src={post.author.avatar}
           alt={post.author.username}
+          loading="lazy"
           className="h-10 w-10 rounded-full border border-zinc-900 object-cover shadow-sm bg-zinc-900"
         />
       </div>
@@ -71,9 +74,11 @@ const PostCard: React.FC<PostCardProps> = ({
           {post.content}
         </p>
 
-        {/* Media Section */}
+        {/* Media Section with Progressive Loading */}
         {post.image && (
           <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             whileHover={{ opacity: 0.95 }}
             onClick={(e) => {
               e.stopPropagation();
@@ -82,11 +87,18 @@ const PostCard: React.FC<PostCardProps> = ({
             className="relative mt-3 w-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900"
             style={{ maxHeight: '512px' }}
           >
+            {/* 骨架屏占位 */}
+            {!imgLoaded && (
+              <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
+                <div className="w-10 h-10 border-2 border-zinc-800 rounded-full border-t-zinc-600 animate-spin" />
+              </div>
+            )}
             <img
               src={post.image}
               alt="post media"
-              className="block w-full h-auto max-h-[512px] object-cover"
+              className={`block w-full h-auto max-h-[512px] object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="lazy"
+              onLoad={() => setImgLoaded(true)}
             />
           </motion.div>
         )}

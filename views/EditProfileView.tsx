@@ -85,8 +85,12 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({ user, onSave, onCance
 
       <div className="flex-1 overflow-y-auto pb-10">
         {/* Profile Media Edit */}
-        <div className="relative h-32 bg-zinc-800">
-          <img src="https://picsum.photos/seed/cover/800/200" className="w-full h-full object-cover opacity-60" alt="cover" />
+        <div className="relative h-32 bg-zinc-900 overflow-hidden">
+          <img 
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" 
+            className="w-full h-full object-cover opacity-60" 
+            alt="cover" 
+          />
           <div className="absolute inset-0 flex items-center justify-center">
             <button className="p-3 bg-black/40 hover:bg-black/60 rounded-full text-white transition-all backdrop-blur-sm">
               <Camera size={22} />

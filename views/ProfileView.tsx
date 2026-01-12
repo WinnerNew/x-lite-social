@@ -29,8 +29,13 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onEditProfi
       </header>
 
       <div className="flex-1">
-        <div className="h-32 bg-zinc-800 relative">
-          <img src="https://picsum.photos/seed/cover/800/200" className="w-full h-full object-cover opacity-80" alt="cover" />
+        <div className="h-32 bg-zinc-900 relative overflow-hidden">
+          <img 
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" 
+            className="w-full h-full object-cover" 
+            alt="cover" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
           <div className="absolute -bottom-10 left-4">
             <div className="w-20 h-20 rounded-full border-4 border-black bg-zinc-900 overflow-hidden shadow-lg">
               <img src={user.avatar} className="w-full h-full object-cover" alt="profile" />
