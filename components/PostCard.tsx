@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Heart,
@@ -6,6 +5,7 @@ import {
   Repeat2,
   Share,
   MoreHorizontal,
+  BarChart2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Post } from '../types';
@@ -16,6 +16,13 @@ interface PostCardProps {
   onReply: (post: Post) => void;
 }
 
+// Simulated verified badge
+const VerifiedBadge = () => (
+  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-[#1d9bf0] ml-0.5 inline-block">
+    <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91c-1.31.67-2.2 1.91-2.2 3.34s.89 2.67 2.2 3.34c-.46 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.35-6.2 6.76z"></path>
+  </svg>
+);
+
 const PostCard: React.FC<PostCardProps> = ({
   post,
   onImagePreview,
@@ -25,6 +32,8 @@ const PostCard: React.FC<PostCardProps> = ({
   const [reposted, setReposted] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [imgLoaded, setImgLoaded] = useState(false);
+
+  const isVerified = post.author.handle === '@google_gemini' || post.author.handle === '@vitejs';
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,135 +48,101 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
   return (
-    <div className="flex w-full overflow-hidden border-b border-zinc-900 bg-black p-4 transition-colors hover:bg-zinc-900/20 cursor-pointer active:bg-zinc-900/40">
-      {/* Avatar Section */}
+    <article className="flex w-full border-b border-[rgb(47,51,54)] bg-black px-4 py-3 transition-colors hover:bg-white/[0.02] cursor-pointer active:bg-white/[0.04]">
+      {/* Avatar */}
       <div className="flex-shrink-0 mr-3">
-        <div className="h-10 w-10 rounded-full border border-zinc-800 overflow-hidden bg-zinc-900 shadow-inner">
+        <div className="h-10 w-10 rounded-full bg-zinc-900 overflow-hidden">
           <img
             src={post.author.avatar}
             alt={post.author.username}
-            loading="lazy"
             className="h-full w-full object-cover"
           />
         </div>
       </div>
 
-      {/* Content Section */}
+      {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-0.5">
-          <div className="flex min-w-0 items-center gap-1.5">
-            <span className="truncate text-[15px] font-bold text-zinc-100 hover:underline decoration-zinc-500 underline-offset-2">
+        <div className="flex items-center justify-between">
+          <div className="flex min-w-0 items-center gap-1">
+            <span className="truncate text-[15px] font-bold text-[#e7e9ea] hover:underline">
               {post.author.username}
             </span>
-            <span className="truncate text-[14px] text-zinc-500">
+            {isVerified && <VerifiedBadge />}
+            <span className="truncate text-[15px] text-[#71767b] ml-0.5">
               {post.author.handle}
             </span>
-            <span className="flex-shrink-0 text-[14px] text-zinc-600 font-medium">
+            <span className="flex-shrink-0 text-[15px] text-[#71767b]">
               · {post.timestamp}
             </span>
           </div>
-          <button className="rounded-full p-1.5 text-zinc-600 transition-all hover:bg-sky-500/10 hover:text-sky-500 active:scale-90">
+          <button className="text-[#71767b] p-1.5 -mr-1.5 hover:bg-[#1d9bf0]/10 hover:text-[#1d9bf0] rounded-full transition-colors">
             <MoreHorizontal size={16} />
           </button>
         </div>
 
-        {/* Text Content */}
-        <p className="break-words text-[15px] leading-relaxed text-zinc-200">
+        <p className="mt-0.5 text-[15px] leading-[20px] text-[#e7e9ea] whitespace-pre-wrap break-words">
           {post.content}
         </p>
 
-        {/* Media Section */}
         {post.image && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ scale: 0.995 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onImagePreview(post.image!);
-            }}
-            className="relative mt-3 w-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900"
-            style={{ maxHeight: '512px' }}
+          <div
+            onClick={(e) => { e.stopPropagation(); onImagePreview(post.image!); }}
+            className="mt-3 relative w-full overflow-hidden rounded-[16px] border border-[rgb(47,51,54)] bg-[#16181c]"
           >
-            {!imgLoaded && (
-              <div className="absolute inset-0 bg-zinc-900 animate-pulse-zinc flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-zinc-800 rounded-full border-t-zinc-500 animate-spin" />
-              </div>
-            )}
+            {!imgLoaded && <div className="aspect-[16/9] animate-pulse-noir" />}
             <img
               src={post.image}
-              alt="post media"
-              className={`block w-full h-auto max-h-[512px] object-cover transition-all duration-700 ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
-              loading="lazy"
+              alt="content"
+              className={`w-full h-auto object-cover transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setImgLoaded(true)}
             />
-          </motion.div>
+          </div>
         )}
 
-        {/* Interaction Bar */}
-        <div className="mt-4 flex max-w-[360px] justify-between text-zinc-500 -ml-2">
+        <div className="mt-3 flex justify-between text-[#71767b] max-w-[425px]">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onReply(post);
-            }}
-            className="group flex items-center gap-2 transition-colors hover:text-sky-500 active:scale-95"
+            onClick={(e) => { e.stopPropagation(); onReply(post); }}
+            className="group flex items-center gap-1 hover:text-[#1d9bf0] transition-colors"
           >
-            <div className="rounded-full p-2 transition-colors group-hover:bg-sky-500/10 group-active:bg-sky-500/20">
-              <MessageCircle size={18} className="stroke-[1.8]" />
+            <div className="p-2 -m-2 group-hover:bg-[#1d9bf0]/10 rounded-full">
+              <MessageCircle size={18} />
             </div>
-            <span className="text-[13px] font-semibold tabular-nums">{post.replies}</span>
+            <span className="text-[13px]">{post.replies}</span>
           </button>
 
           <button
             onClick={handleRepost}
-            className={`group flex items-center gap-2 transition-colors ${
-              reposted ? 'text-emerald-500' : 'hover:text-emerald-500'
-            } active:scale-95`}
+            className={`group flex items-center gap-1 transition-colors ${reposted ? 'text-[#00ba7c]' : 'hover:text-[#00ba7c]'}`}
           >
-            <div
-              className={`rounded-full p-2 transition-colors ${
-                reposted ? 'bg-emerald-500/10' : 'group-hover:bg-emerald-500/10 group-active:bg-emerald-500/20'
-              }`}
-            >
-              <Repeat2 size={18} className="stroke-[1.8]" />
+            <div className={`p-2 -m-2 ${reposted ? 'bg-[#00ba7c]/10' : 'group-hover:bg-[#00ba7c]/10'} rounded-full`}>
+              <Repeat2 size={18} />
             </div>
-            <span className="text-[13px] font-semibold tabular-nums">
-              {post.reposts + (reposted ? 1 : 0)}
-            </span>
+            <span className="text-[13px]">{post.reposts + (reposted ? 1 : 0)}</span>
           </button>
 
           <button
             onClick={handleLike}
-            className={`group flex items-center gap-2 transition-colors ${
-              liked ? 'text-pink-500' : 'hover:text-pink-500'
-            } active:scale-95`}
+            className={`group flex items-center gap-1 transition-colors ${liked ? 'text-[#f91880]' : 'hover:text-[#f91880]'}`}
           >
-            <div
-              className={`rounded-full p-2 transition-colors ${
-                liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10 group-active:bg-pink-500/20'
-              }`}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={liked ? 'liked' : 'unliked'}
-                  initial={liked ? { scale: 0.6 } : false}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                >
-                  <Heart size={18} className="stroke-[1.8]" fill={liked ? 'currentColor' : 'none'} />
-                </motion.div>
-              </AnimatePresence>
+            <div className={`p-2 -m-2 ${liked ? 'bg-[#f91880]/10' : 'group-hover:bg-[#f91880]/10'} rounded-full`}>
+              <Heart size={18} fill={liked ? 'currentColor' : 'none'} className={liked ? 'scale-110 transition-transform' : ''} />
             </div>
-            <span className="text-[13px] font-semibold tabular-nums">{likeCount}</span>
+            <span className="text-[13px]">{likeCount}</span>
           </button>
 
-          <button className="group flex items-center rounded-full p-2 transition-colors hover:bg-sky-500/10 hover:text-sky-500 active:scale-95">
-            <Share size={18} className="stroke-[1.8]" />
+          <button className="group flex items-center gap-1 hover:text-[#1d9bf0] transition-colors">
+            <div className="p-2 -m-2 group-hover:bg-[#1d9bf0]/10 rounded-full">
+              <BarChart2 size={18} />
+            </div>
+            <span className="text-[13px]">{(post.likes * 14).toLocaleString()}</span>
+          </button>
+
+          <button className="p-2 -m-2 hover:bg-[#1d9bf0]/10 hover:text-[#1d9bf0] rounded-full transition-colors">
+            <Share size={18} />
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

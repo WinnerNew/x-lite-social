@@ -12,23 +12,33 @@ interface HomeViewProps {
 const generateMockPosts = (startIndex: number, count: number): Post[] => {
   return Array.from({ length: count }).map((_, i) => {
     const id = (startIndex + i).toString();
+    const authors = [
+      { name: 'Gemini 3 Pro', handle: '@google_gemini' },
+      { name: 'Vite Official', handle: '@vitejs' },
+      { name: 'React', handle: '@reactjs' },
+      { name: 'Tailwind CSS', handle: '@tailwindcss' }
+    ];
+    const author = authors[i % authors.length];
+    
     return {
       id,
       userId: `user-${id}`,
       author: {
         id: `user-${id}`,
-        username: `X-User ${id}`,
-        handle: `@x_user_${id}`,
-        avatar: `https://picsum.photos/seed/${id}/200`,
-        followers: 120,
+        username: author.name,
+        handle: author.handle,
+        avatar: `https://picsum.photos/seed/${author.handle}/200`,
+        followers: 1200000,
         following: 50
       },
-      content: `Hello X! This is post ${id} with some #SocialH5 #Tech vibe. Dynamic content and infinite scroll working smoothly!`,
+      content: i % 3 === 0 
+        ? `Working on the final touches of this H5 Social Template. Clean code, high performance, and that premium X aesthetic. 🛠️✨ #WebDev #React`
+        : `Infinite scrolling is now smoother than ever using IntersectionObserver and React 19. Check out the latest builds!`,
       timestamp: `${i + 1}h`,
-      likes: Math.floor(Math.random() * 100),
-      reposts: Math.floor(Math.random() * 20),
-      replies: Math.floor(Math.random() * 10),
-      image: Math.random() > 0.5 ? `https://picsum.photos/seed/img${id}/800/600` : undefined
+      likes: Math.floor(Math.random() * 5000) + 200,
+      reposts: Math.floor(Math.random() * 1000) + 10,
+      replies: Math.floor(Math.random() * 500) + 5,
+      image: Math.random() > 0.5 ? `https://picsum.photos/seed/post_img_${id}/1200/675` : undefined
     };
   });
 };
@@ -63,32 +73,34 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
   const TabButton = ({ type, label }: { type: 'FOR_YOU' | 'FOLLOWING', label: string }) => (
     <button 
       onClick={() => setTab(type)}
-      className="flex-1 py-4 relative active:bg-zinc-900/50 transition-colors"
+      className="flex-1 hover:bg-white/[0.05] transition-colors relative h-[53px]"
     >
-      <span className={`text-[15px] font-bold ${tab === type ? 'text-zinc-100' : 'text-zinc-500'}`}>
-        {label}
-      </span>
-      {tab === type && (
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-sky-500 rounded-full" />
-      )}
+      <div className="flex flex-col items-center justify-center h-full">
+        <span className={`text-[15px] font-bold ${tab === type ? 'text-[#e7e9ea]' : 'text-[#71767b]'}`}>
+          {label}
+        </span>
+        {tab === type && (
+          <div className="absolute bottom-0 h-[4px] min-w-[56px] bg-[#1d9bf0] rounded-full" />
+        )}
+      </div>
     </button>
   );
 
   return (
     <div className="flex flex-col min-h-full">
-      <header className="sticky top-0 z-40 glass-header border-b border-zinc-900 pt-safe">
-        <div className="flex items-center px-4 py-1">
+      <header className="sticky top-0 z-40 glass-header pt-safe">
+        <div className="flex items-center px-4 py-2">
           <div className="w-8 h-8 rounded-full overflow-hidden">
             <img src={currentUser.avatar} className="w-full h-full object-cover" alt="me" />
           </div>
           <div className="flex-1 flex justify-center">
-            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white">
+            <svg viewBox="0 0 24 24" className="h-[20px] w-[20px] fill-white">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
             </svg>
           </div>
           <div className="w-8" />
         </div>
-        <div className="flex w-full">
+        <div className="flex w-full px-4">
           <TabButton type="FOR_YOU" label="For you" />
           <TabButton type="FOLLOWING" label="Following" />
         </div>
@@ -98,8 +110,8 @@ const HomeView: React.FC<HomeViewProps> = ({ currentUser }) => {
         {posts.map(post => (
           <PostCard key={post.id} post={post} onImagePreview={setPreviewImage} onReply={setReplyPost} />
         ))}
-        <div ref={observerTarget} className="py-10 flex justify-center">
-          {isLoading && <Loader2 className="w-6 h-6 text-sky-500 animate-spin" />}
+        <div ref={observerTarget} className="py-12 flex justify-center">
+          {isLoading && <Loader2 className="w-7 h-7 text-[#1d9bf0] animate-spin" />}
         </div>
       </div>
 

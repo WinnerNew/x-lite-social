@@ -1,26 +1,21 @@
-/* 核心设计系统：Zinc & Noir (Twitter Style) */
+/* 核心设计系统：X (Twitter) Precise Noir */
 :root {
   color-scheme: dark;
   --bg-black: #000000;
-  --zinc-50: #fafafa;
-  --zinc-100: #f4f4f5;
-  --zinc-200: #e4e4e7;
-  --zinc-300: #d4d4d8;
-  --zinc-400: #a1a1aa;
+  --x-blue: #1d9bf0;
+  --x-blue-hover: #1a8cd8;
+  --x-border: rgb(47, 51, 54);
+  --x-border-light: rgb(31, 34, 37);
   --zinc-500: #71717a;
-  --zinc-600: #52525b;
-  --zinc-700: #3f3f46;
-  --zinc-800: #27272a;
-  --zinc-900: #18181b;
-  --zinc-950: #09090b;
-  --sky-500: #1d9bf0; /* Twitter Blue */
-  --sky-600: #1a8cd8;
+  --text-main: #e7e9ea;
+  --text-dim: #71767b;
 }
 
 html, body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-black);
+  color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   height: 100%;
@@ -28,92 +23,82 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* 布局容器 */
 #root {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
-  background-color: var(--zinc-950);
+  background-color: var(--bg-black);
 }
 
 .ignore-vw {
   max-width: 450px !important; 
 }
 
-/* --- 全局滚动条美化 (Webkit) --- */
-/* 定义滚动条轨道宽度与高度 */
+/* --- 精致滚动条 --- */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 0px; /* 移动端通常隐藏 */
 }
 
-/* 滚动条滑块 (Thumb) */
-::-webkit-scrollbar-thumb {
-  background-color: rgba(113, 113, 122, 0.2); /* 默认极淡的 Zinc-500 */
-  border-radius: 10px;
-  background-clip: padding-box;
-  /* 增加透明边距，模拟悬浮效果 */
-  border: 1px solid transparent; 
-  transition: background-color 0.3s ease;
-}
-
-/* 交互状态：用户鼠标悬停或正在滚动时加深颜色 */
-*:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(113, 113, 122, 0.45);
-}
-
-::-webkit-scrollbar-thumb:active {
-  background-color: rgba(113, 113, 122, 0.6);
-}
-
-/* 滚动条轨道 (Track) - 保持透明以实现悬浮感 */
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* 针对 Firefox 的兼容性配置 */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(113, 113, 122, 0.2) transparent;
-}
-
-/* 强制隐藏类 (如需要彻底隐藏某容器滚动条) */
-.hide-scrollbar {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-.hide-scrollbar::-webkit-scrollbar {
-  display: none !important;
-}
-
-/* --- 核心布局工具 --- */
+/* --- 核心布局与头部 --- */
 .pt-safe {
-  padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
 }
 .pb-safe {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
 }
 
 .glass-header {
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(15px) saturate(180%);
-  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid var(--x-border);
 }
 
+/* --- 交互动效 --- */
 .active-press {
-  transition: transform 0.1s ease;
+  transition: transform 0.1s ease, background-color 0.2s ease;
 }
 .active-press:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-.scroll-smooth-touch {
-  -webkit-overflow-scrolling: touch;
+.btn-x-primary {
+  background-color: var(--x-blue);
+  color: white;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
 }
 
-/* 图片适配 */
+.btn-x-white {
+  background-color: #eff3f4;
+  color: #0f1419;
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+/* 文字细节 */
+.font-twitter {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.text-dimmed {
+  color: var(--text-dim);
+}
+
+/* 骨架屏 */
+@keyframes pulse-noir {
+  0%, 100% { background-color: #16181c; }
+  50% { background-color: #202327; }
+}
+.animate-pulse-noir {
+  animation: pulse-noir 2s ease-in-out infinite;
+}
+
 img {
   user-select: none;
-  pointer-events: none;
+  -webkit-user-drag: none;
 }
