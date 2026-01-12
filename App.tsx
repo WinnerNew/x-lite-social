@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Home, Search, Bell, Mail, User, Plus } from 'lucide-react';
+import { Home, Search, Bell, Mail, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HomeView from './views/HomeView';
 import ExploreView from './views/ExploreView';
@@ -30,47 +30,76 @@ const App: React.FC = () => {
 
   const renderView = () => {
     if (!currentUser && currentView !== 'AUTH') {
-       return <AuthView onLogin={handleLogin} />;
+      return <AuthView onLogin={handleLogin} />;
     }
 
     switch (currentView) {
-      case 'AUTH': return <AuthView onLogin={handleLogin} />;
-      case 'HOME': return <HomeView currentUser={currentUser!} />;
-      case 'EXPLORE': return <ExploreView />;
-      case 'NOTIFICATIONS': return <NotificationsView />;
-      case 'MESSAGES': return <MessageView onSelectChat={(id) => { setActiveChatId(id); setCurrentView('CHAT'); }} />;
-      case 'CHAT': return <ChatRoomView chatId={activeChatId!} onBack={() => setCurrentView('MESSAGES')} />;
-      case 'PROFILE': return <ProfileView user={currentUser!} onLogout={handleLogout} onSettings={() => setCurrentView('SETTINGS')} onBack={() => setCurrentView('HOME')} />;
-      case 'SETTINGS': return <SettingsView onBack={() => setCurrentView('PROFILE')} onLogout={handleLogout} />;
-      case 'CREATE_POST': return <CreatePostView onBack={() => setCurrentView('HOME')} />;
-      default: return <HomeView currentUser={currentUser!} />;
+      case 'AUTH':
+        return <AuthView onLogin={handleLogin} />;
+      case 'HOME':
+        return <HomeView currentUser={currentUser!} />;
+      case 'EXPLORE':
+        return <ExploreView />;
+      case 'NOTIFICATIONS':
+        return <NotificationsView />;
+      case 'MESSAGES':
+        return (
+          <MessageView
+            onSelectChat={(id) => {
+              setActiveChatId(id);
+              setCurrentView('CHAT');
+            }}
+          />
+        );
+      case 'CHAT':
+        return <ChatRoomView chatId={activeChatId!} onBack={() => setCurrentView('MESSAGES')} />;
+      case 'PROFILE':
+        return (
+          <ProfileView
+            user={currentUser!}
+            onLogout={handleLogout}
+            onSettings={() => setCurrentView('SETTINGS')}
+            onBack={() => setCurrentView('HOME')}
+          />
+        );
+      case 'SETTINGS':
+        return <SettingsView onBack={() => setCurrentView('PROFILE')} onLogout={handleLogout} />;
+      case 'CREATE_POST':
+        return <CreatePostView onBack={() => setCurrentView('HOME')} />;
+      default:
+        return <HomeView currentUser={currentUser!} />;
     }
   };
 
-  const showNavbar = currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS'].includes(currentView);
+  const showNavbar =
+    currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS'].includes(currentView);
 
-  const NavItem = ({ icon: Icon, view }: { icon: any, view: ViewState }) => (
+  const NavItem = ({ icon: Icon, view }: { icon: any; view: ViewState }) => (
     <button
       onClick={() => setCurrentView(view)}
-      className={`flex flex-col items-center justify-center flex-1 py-3 transition-colors active:scale-90 ${
-        currentView === view ? 'text-zinc-100' : 'text-zinc-500'
+      className={`flex flex-1 flex-col items-center justify-center py-3 transition-all active:scale-90 ${
+        currentView === view ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-300'
       }`}
     >
-      <Icon className={`w-7 h-7 ${currentView === view ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+      <Icon
+        className={`h-7 w-7 transition-transform ${
+          currentView === view ? 'scale-110 stroke-[2.5px]' : 'stroke-[1.5px]'
+        }`}
+      />
     </button>
   );
 
   return (
-    <div className="flex justify-center w-full min-h-screen bg-zinc-950">
-      <div className="w-full max-w-[450px] bg-black min-h-screen relative flex flex-col border-x border-zinc-800 shadow-2xl overflow-hidden">
+    <div className="flex min-h-screen w-full justify-center bg-zinc-950 antialiased">
+      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden border-x border-zinc-900 bg-black shadow-2xl">
         <AnimatePresence mode="wait">
-          <motion.main 
+          <motion.main
             key={currentView}
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 5 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.2 }}
-            className="flex-1 overflow-y-auto hide-scrollbar"
+            exit={{ opacity: 0, x: -5 }}
+            transition={{ duration: 0.15 }}
+            className="hide-scrollbar flex-1 overflow-y-auto overflow-x-hidden"
           >
             {renderView()}
           </motion.main>
@@ -78,25 +107,35 @@ const App: React.FC = () => {
 
         {showNavbar && (
           <>
-            <motion.button 
+            <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setCurrentView('CREATE_POST')}
-              className="absolute bottom-24 right-5 bg-sky-500 hover:bg-sky-600 text-white p-4 rounded-full shadow-lg shadow-sky-500/20 z-40"
+              className="absolute bottom-24 right-5 z-40 rounded-full bg-sky-500 p-4 text-white shadow-lg shadow-sky-500/20 transition-transform hover:bg-sky-600"
             >
               <Plus size={24} strokeWidth={3} />
             </motion.button>
 
-            <nav className="sticky bottom-0 w-full bg-black/80 backdrop-blur-xl border-t border-zinc-800 flex justify-around items-center z-50 pb-[env(safe-area-inset-bottom)]">
+            <nav className="sticky bottom-0 z-50 flex w-full items-center justify-around border-t border-zinc-900 bg-black/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
               <NavItem icon={Home} view="HOME" />
               <NavItem icon={Search} view="EXPLORE" />
               <NavItem icon={Bell} view="NOTIFICATIONS" />
               <NavItem icon={Mail} view="MESSAGES" />
-              <button 
+              <button
                 onClick={() => setCurrentView('PROFILE')}
-                className="flex-1 flex justify-center py-3"
+                className="flex flex-1 justify-center py-3"
               >
-                <div className={`w-7 h-7 rounded-full border-2 overflow-hidden transition-all ${currentView === 'PROFILE' ? 'border-sky-500 scale-110' : 'border-transparent opacity-70'}`}>
-                  <img src={currentUser?.avatar} className="w-full h-full object-cover" alt="me" />
+                <div
+                  className={`h-7 w-7 overflow-hidden rounded-full border-2 transition-all ${
+                    currentView === 'PROFILE'
+                      ? 'scale-110 border-sky-500'
+                      : 'border-transparent opacity-70'
+                  }`}
+                >
+                  <img
+                    src={currentUser?.avatar}
+                    className="h-full w-full object-cover"
+                    alt="avatar"
+                  />
                 </div>
               </button>
             </nav>

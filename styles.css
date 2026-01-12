@@ -2,6 +2,7 @@
 :root {
   color-scheme: dark;
   --bg-black: #000000;
+  --zinc-900: #18181b;
   --zinc-800: #27272a;
 }
 
@@ -10,7 +11,15 @@ body {
   background-color: var(--bg-black);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+/* Base image containment */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  -webkit-user-drag: none;
 }
 
 /* Scrollbar reset */
@@ -22,9 +31,14 @@ body {
   scrollbar-width: none;
 }
 
-/* Ensure images don't overflow */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+/* Fix potential text overflow in flex containers */
+.min-w-0 {
+  min-width: 0;
+}
+
+/* Prevent accidental lateral swipe navigation on some browsers */
+#root {
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }

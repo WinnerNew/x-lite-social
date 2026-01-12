@@ -19,7 +19,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
     e.stopPropagation();
     const newLiked = !liked;
     setLiked(newLiked);
-    setLikeCount(prev => newLiked ? prev + 1 : prev - 1);
+    setLikeCount((prev) => (newLiked ? prev + 1 : prev - 1));
   };
 
   const handleRepost = (e: React.MouseEvent) => {
@@ -28,69 +28,98 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
   };
 
   return (
-    <div className="border-b border-zinc-800 p-4 flex gap-3 hover:bg-zinc-900/40 transition-colors cursor-pointer w-full overflow-hidden">
-      <div className="flex-shrink-0">
-        <img 
-          src={post.author.avatar} 
-          alt={post.author.username} 
-          className="w-10 h-10 rounded-full object-cover bg-zinc-900 shadow-sm border border-zinc-800" 
+    <div className="flex w-full overflow-hidden border-b border-zinc-900 bg-black p-4 transition-colors hover:bg-zinc-900/30 cursor-pointer">
+      {/* Avatar Section */}
+      <div className="flex-shrink-0 mr-3">
+        <img
+          src={post.author.avatar}
+          alt={post.author.username}
+          className="h-10 w-10 rounded-full border border-zinc-800 object-cover shadow-sm"
         />
       </div>
 
+      {/* Content Section - Crucial min-w-0 to prevent flex blowout */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between group">
-          <div className="flex items-center gap-1 min-w-0">
-            <span className="font-bold text-zinc-100 truncate hover:underline text-[15px]">{post.author.username}</span>
-            <span className="text-zinc-500 truncate text-[14px]">{post.author.handle}</span>
-            <span className="text-zinc-500 text-[14px] flex-shrink-0">· {post.timestamp}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex min-w-0 items-center gap-1">
+            <span className="truncate text-[15px] font-bold text-zinc-100 hover:underline">
+              {post.author.username}
+            </span>
+            <span className="truncate text-[14px] text-zinc-500">{post.author.handle}</span>
+            <span className="flex-shrink-0 text-[14px] text-zinc-500">· {post.timestamp}</span>
           </div>
-          <button className="text-zinc-500 hover:text-sky-500 hover:bg-sky-500/10 p-1.5 rounded-full transition-all">
+          <button className="rounded-full p-1.5 text-zinc-600 transition-colors hover:bg-sky-500/10 hover:text-sky-500">
             <MoreHorizontal size={16} />
           </button>
         </div>
 
-        <p className="text-[15px] leading-normal text-zinc-200 mt-0.5 whitespace-pre-wrap break-words">{post.content}</p>
+        {/* Text Content with proper wrapping */}
+        <p className="mt-0.5 break-words text-[15px] leading-relaxed text-zinc-200">
+          {post.content}
+        </p>
 
+        {/* Media Section - Forced constraints to prevent overflow */}
         {post.image && (
-          <motion.div 
+          <motion.div
             whileHover={{ opacity: 0.95 }}
-            onClick={(e) => { e.stopPropagation(); onImagePreview(post.image!); }}
-            className="mt-3 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 max-h-96 w-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              onImagePreview(post.image!);
+            }}
+            className="relative mt-3 w-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900"
+            style={{ maxHeight: '512px' }}
           >
-            <img 
-              src={post.image} 
-              alt="post" 
-              className="w-full h-full object-cover max-h-96" 
+            <img
+              src={post.image}
+              alt="post media"
+              className="block h-auto w-full object-contain"
+              loading="lazy"
             />
           </motion.div>
         )}
 
-        <div className="flex justify-between text-zinc-500 mt-3 -ml-2 max-w-[320px]">
-          <button 
-            onClick={(e) => { e.stopPropagation(); onReply(post); }}
-            className="flex items-center gap-1 group transition-colors hover:text-sky-500"
+        {/* Interaction Bar */}
+        <div className="mt-3 flex max-w-sm justify-between text-zinc-500">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onReply(post);
+            }}
+            className="group flex items-center gap-2 transition-colors hover:text-sky-500"
           >
-            <div className="p-2 rounded-full group-hover:bg-sky-500/10 transition-colors">
+            <div className="rounded-full p-2 transition-colors group-hover:bg-sky-500/10">
               <MessageCircle size={18} />
             </div>
-            <span className="text-[13px] font-medium">{post.replies}</span>
-          </button>
-          
-          <button 
-            onClick={handleRepost}
-            className={`flex items-center gap-1 group transition-colors ${reposted ? 'text-green-500' : 'hover:text-green-500'}`}
-          >
-            <div className={`p-2 rounded-full transition-colors ${reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'}`}>
-              <Repeat2 size={18} />
-            </div>
-            <span className="text-[13px] font-medium">{post.reposts + (reposted ? 1 : 0)}</span>
+            <span className="text-[13px]">{post.replies}</span>
           </button>
 
-          <button 
-            onClick={handleLike}
-            className={`flex items-center gap-1 group transition-colors ${liked ? 'text-pink-500' : 'hover:text-pink-500'}`}
+          <button
+            onClick={handleRepost}
+            className={`group flex items-center gap-2 transition-colors ${
+              reposted ? 'text-green-500' : 'hover:text-green-500'
+            }`}
           >
-            <div className={`p-2 rounded-full transition-colors ${liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
+            <div
+              className={`rounded-full p-2 transition-colors ${
+                reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'
+              }`}
+            >
+              <Repeat2 size={18} />
+            </div>
+            <span className="text-[13px]">{post.reposts + (reposted ? 1 : 0)}</span>
+          </button>
+
+          <button
+            onClick={handleLike}
+            className={`group flex items-center gap-2 transition-colors ${
+              liked ? 'text-pink-500' : 'hover:text-pink-500'
+            }`}
+          >
+            <div
+              className={`rounded-full p-2 transition-colors ${
+                liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'
+              }`}
+            >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={liked ? 'liked' : 'unliked'}
@@ -101,13 +130,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
                 </motion.div>
               </AnimatePresence>
             </div>
-            <span className="text-[13px] font-medium">{likeCount}</span>
+            <span className="text-[13px]">{likeCount}</span>
           </button>
 
-          <button className="flex items-center gap-1 group hover:text-sky-500">
-            <div className="p-2 rounded-full group-hover:bg-sky-500/10 transition-colors">
-              <Share size={18} />
-            </div>
+          <button className="group flex items-center rounded-full p-2 transition-colors hover:bg-sky-500/10 hover:text-sky-500">
+            <Share size={18} />
           </button>
         </div>
       </div>
