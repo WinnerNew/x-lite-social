@@ -11,6 +11,7 @@ import AuthView from './views/AuthView';
 import NotificationsView from './views/NotificationsView';
 import SettingsView from './views/SettingsView';
 import CreatePostView from './views/CreatePostView';
+import EditProfileView from './views/EditProfileView';
 import { User as UserType, ViewState } from './types';
 
 const App: React.FC = () => {
@@ -26,6 +27,11 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setCurrentUser(null);
     setCurrentView('AUTH');
+  };
+
+  const handleUpdateUser = (updatedUser: UserType) => {
+    setCurrentUser(updatedUser);
+    setCurrentView('PROFILE');
   };
 
   const renderView = () => {
@@ -59,7 +65,16 @@ const App: React.FC = () => {
             user={currentUser!}
             onLogout={handleLogout}
             onSettings={() => setCurrentView('SETTINGS')}
+            onEditProfile={() => setCurrentView('EDIT_PROFILE')}
             onBack={() => setCurrentView('HOME')}
+          />
+        );
+      case 'EDIT_PROFILE':
+        return (
+          <EditProfileView
+            user={currentUser!}
+            onSave={handleUpdateUser}
+            onCancel={() => setCurrentView('PROFILE')}
           />
         );
       case 'SETTINGS':
@@ -72,7 +87,7 @@ const App: React.FC = () => {
   };
 
   const showNavbar =
-    currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS'].includes(currentView);
+    currentUser && !['AUTH', 'CHAT', 'CREATE_POST', 'SETTINGS', 'EDIT_PROFILE'].includes(currentView);
 
   const NavItem = ({ icon: Icon, view }: { icon: any; view: ViewState }) => (
     <button

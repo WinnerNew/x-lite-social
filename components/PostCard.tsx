@@ -1,6 +1,11 @@
-
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Repeat2, Share, MoreHorizontal } from 'lucide-react';
+import {
+  Heart,
+  MessageCircle,
+  Repeat2,
+  Share,
+  MoreHorizontal,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Post } from '../types';
 
@@ -10,7 +15,11 @@ interface PostCardProps {
   onReply: (post: Post) => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) => {
+const PostCard: React.FC<PostCardProps> = ({
+  post,
+  onImagePreview,
+  onReply,
+}) => {
   const [liked, setLiked] = useState(false);
   const [reposted, setReposted] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes);
@@ -34,31 +43,35 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
         <img
           src={post.author.avatar}
           alt={post.author.username}
-          className="h-10 w-10 rounded-full border border-zinc-800 object-cover shadow-sm"
+          className="h-10 w-10 rounded-full border border-zinc-900 object-cover shadow-sm bg-zinc-900"
         />
       </div>
 
-      {/* Content Section - Crucial min-w-0 to prevent flex blowout */}
+      {/* Content Section */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-0.5">
           <div className="flex min-w-0 items-center gap-1">
             <span className="truncate text-[15px] font-bold text-zinc-100 hover:underline">
               {post.author.username}
             </span>
-            <span className="truncate text-[14px] text-zinc-500">{post.author.handle}</span>
-            <span className="flex-shrink-0 text-[14px] text-zinc-500">· {post.timestamp}</span>
+            <span className="truncate text-[14px] text-zinc-500">
+              {post.author.handle}
+            </span>
+            <span className="flex-shrink-0 text-[14px] text-zinc-500">
+              · {post.timestamp}
+            </span>
           </div>
           <button className="rounded-full p-1.5 text-zinc-600 transition-colors hover:bg-sky-500/10 hover:text-sky-500">
             <MoreHorizontal size={16} />
           </button>
         </div>
 
-        {/* Text Content with proper wrapping */}
-        <p className="mt-0.5 break-words text-[15px] leading-relaxed text-zinc-200">
+        {/* Text Content */}
+        <p className="break-words text-[15px] leading-normal text-zinc-200">
           {post.content}
         </p>
 
-        {/* Media Section - Forced constraints to prevent overflow */}
+        {/* Media Section */}
         {post.image && (
           <motion.div
             whileHover={{ opacity: 0.95 }}
@@ -72,30 +85,30 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
             <img
               src={post.image}
               alt="post media"
-              className="block h-auto w-full object-contain"
+              className="block w-full h-auto max-h-[512px] object-cover"
               loading="lazy"
             />
           </motion.div>
         )}
 
         {/* Interaction Bar */}
-        <div className="mt-3 flex max-w-sm justify-between text-zinc-500">
+        <div className="mt-3 flex max-w-[340px] justify-between text-zinc-500 -ml-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onReply(post);
             }}
-            className="group flex items-center gap-2 transition-colors hover:text-sky-500"
+            className="group flex items-center gap-1 transition-colors hover:text-sky-500"
           >
             <div className="rounded-full p-2 transition-colors group-hover:bg-sky-500/10">
               <MessageCircle size={18} />
             </div>
-            <span className="text-[13px]">{post.replies}</span>
+            <span className="text-[13px] font-medium">{post.replies}</span>
           </button>
 
           <button
             onClick={handleRepost}
-            className={`group flex items-center gap-2 transition-colors ${
+            className={`group flex items-center gap-1 transition-colors ${
               reposted ? 'text-green-500' : 'hover:text-green-500'
             }`}
           >
@@ -106,12 +119,14 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
             >
               <Repeat2 size={18} />
             </div>
-            <span className="text-[13px]">{post.reposts + (reposted ? 1 : 0)}</span>
+            <span className="text-[13px] font-medium">
+              {post.reposts + (reposted ? 1 : 0)}
+            </span>
           </button>
 
           <button
             onClick={handleLike}
-            className={`group flex items-center gap-2 transition-colors ${
+            className={`group flex items-center gap-1 transition-colors ${
               liked ? 'text-pink-500' : 'hover:text-pink-500'
             }`}
           >
@@ -130,7 +145,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onImagePreview, onReply }) =>
                 </motion.div>
               </AnimatePresence>
             </div>
-            <span className="text-[13px]">{likeCount}</span>
+            <span className="text-[13px] font-medium">{likeCount}</span>
           </button>
 
           <button className="group flex items-center rounded-full p-2 transition-colors hover:bg-sky-500/10 hover:text-sky-500">

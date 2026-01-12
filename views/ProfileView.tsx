@@ -1,16 +1,17 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Settings } from 'lucide-react';
+import { ArrowLeft, Calendar, Settings, MapPin, Link as LinkIcon } from 'lucide-react';
 import { User } from '../types';
 
 interface ProfileViewProps {
   user: User;
   onLogout: () => void;
   onSettings: () => void;
+  onEditProfile: () => void;
   onBack: () => void;
 }
 
-const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onBack }) => {
+const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onEditProfile, onBack }) => {
   const [activeTab, setActiveTab] = useState('Posts');
   
   return (
@@ -42,7 +43,10 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onBack }) =
             <button onClick={onSettings} className="p-2 border border-zinc-800 rounded-full hover:bg-zinc-900 transition-all">
               <Settings size={18} />
             </button>
-            <button className="px-4 py-1.5 border border-zinc-800 rounded-full text-sm font-bold hover:bg-zinc-900 transition-all">
+            <button 
+              onClick={onEditProfile}
+              className="px-4 py-1.5 border border-zinc-800 rounded-full text-sm font-bold hover:bg-zinc-900 transition-all"
+            >
               Edit profile
             </button>
           </div>
@@ -54,9 +58,23 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user, onSettings, onBack }) =
 
           <p className="text-[15px] text-zinc-100 leading-relaxed">{user.bio}</p>
 
-          <div className="flex items-center gap-1.5 text-zinc-500 text-sm">
-            <Calendar size={14} />
-            <span>Joined October 2023</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-zinc-500 text-sm">
+            {user.location && (
+              <div className="flex items-center gap-1">
+                <MapPin size={14} />
+                <span>{user.location}</span>
+              </div>
+            )}
+            {user.website && (
+              <div className="flex items-center gap-1">
+                <LinkIcon size={14} />
+                <span className="text-sky-500 hover:underline">{user.website}</span>
+              </div>
+            )}
+            <div className="flex items-center gap-1">
+              <Calendar size={14} />
+              <span>Joined October 2023</span>
+            </div>
           </div>
 
           <div className="flex gap-4 pt-1">

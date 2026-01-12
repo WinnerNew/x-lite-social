@@ -7,6 +7,8 @@ export interface User {
   bio?: string;
   followers: number;
   following: number;
+  location?: string;
+  website?: string;
 }
 
 export interface Post {
@@ -35,4 +37,14 @@ export interface Chat {
   unreadCount: number;
 }
 
-export type ViewState = 'HOME' | 'EXPLORE' | 'NOTIFICATIONS' | 'MESSAGES' | 'PROFILE' | 'CHAT' | 'AUTH' | 'SETTINGS' | 'CREATE_POST';
+export type ViewState = 
+  | 'HOME' 
+  | 'EXPLORE' 
+  | 'NOTIFICATIONS' 
+  | 'MESSAGES' 
+  | 'PROFILE' 
+  | 'CHAT' 
+  | 'AUTH' 
+  | 'SETTINGS' 
+  | 'CREATE_POST'
+  | 'EDIT_PROFILE';
